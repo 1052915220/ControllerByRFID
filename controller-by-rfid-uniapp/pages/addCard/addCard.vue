@@ -178,20 +178,16 @@
 
 						for (let i = 0; i < cardUUIDs.length; i++) {
 							if (cardUUIDs[i] == "") {
-								let len = this.tableData.length;
-								if(i<len){
-									this.tableData.splice(i,1)
-								}
-								continue;
+								this.tableData.splice(i, 7)
+								break;
 							}
-							console.log("this.tableData[i]",this.tableData[i]);
+							console.log("this.tableData[i]", this.tableData[i]);
 							if (this.tableData[i] == null) {
-								cardEntity.id = this.tableData.length +1+"";
+								cardEntity.id = this.tableData.length + 1 + "";
 								cardEntity.name = "未知";
 								cardEntity.cardUUID = cardUUIDs[i];
-								
 								this.tableData.push(cardEntity);
-								console.log("this.tableData",this.tableData);
+								console.log("this.tableData", this.tableData);
 								console.log("2222");
 							} else {
 								console.log("3333");
@@ -199,7 +195,7 @@
 							}
 						}
 						try {
-							console.log("this.tableData",this.tableData);
+							console.log("this.tableData", this.tableData);
 							console.log("保存至本地缓存");
 							uni.setStorageSync('tableData', JSON.stringify(this.tableData));
 						} catch (e) {
