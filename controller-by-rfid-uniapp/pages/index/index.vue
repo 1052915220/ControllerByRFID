@@ -14,6 +14,8 @@
 			}
 		},
 		onLoad() {
+			//检测是否有更新
+			
 			//3秒后，执行函数
 			setTimeout(function() {
 				console.log("213123131");
