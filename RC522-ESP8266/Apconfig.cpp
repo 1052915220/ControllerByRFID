@@ -10,6 +10,7 @@ IPAddress local_IP(192, 168, 7, 1);
 IPAddress gateway(192, 168, 7, 1);
 IPAddress subnet(255, 255, 255, 0);
 ESP8266WebServer server(80);
+ESP8266HTTPUpdateServer httpUpdater;
 
 /**
  * 启动AP模式
@@ -21,6 +22,9 @@ void startApConfig()
   WiFi.softAPConfig(local_IP, gateway, subnet);
   WiFi.softAP(ap_ssid, ap_password);
   printMsg("已启动AP配网，IP地址：" + WiFi.softAPIP().toString() + "， 热点名称：" + (String)ap_ssid);
+  // 网页更新固件
+  httpUpdater.setup(&server);
+  printMsg("启动网页更新固件");
   // 启动web服务
   startWebServer();
 }
@@ -61,6 +65,7 @@ void addCard()
     server.send(200, "text/plain;charset=utf-8", "添加卡片失败，卡片数量超出最大值7");
     return;
   }
+
   //用于测试的代码
   // strcpy(config.cardUUIDs[config.allCardsLength], "123123");
   // config.allCardsLength++;
@@ -115,10 +120,13 @@ void deleteById()
     uint16_t id = ((server.arg("id").toInt()) - 1);
     if (!(id < 7))
     {
-      server.send(200, "text/plain;charset=utf-8", "参数有误，最多7张卡");
+      server.send(200, "text/plain;charset=utf-8", "删除失败：参数有误，最多7张卡");
+      return;
+    }if (!config.allCardsLength>0)
+    {
+      server.send(200, "text/plain;charset=utf-8", "删除失败：请刷新");
       return;
     }
-
     // 从指定索引开始，将该索引后面的元素向前移动一位
     for (int i = id; i < MAX_CARDUUID - 1; ++i)
     {

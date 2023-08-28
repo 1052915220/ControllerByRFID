@@ -69,6 +69,7 @@ void RFIDController()
         if (strcmp(config.cardUUIDs[i], cardUUID.c_str()) == 0)
         {
           printMsg("重复添加卡片......");
+          isAddCardMode = false;
           return;
         }
       }

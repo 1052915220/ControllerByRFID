@@ -13,9 +13,12 @@
 #include "Config.h"
 #include "RC522.h"
 #include <ESP8266WebServer.h>
+#include <ESP8266HTTPUpdateServer.h>
 
 
 extern ESP8266WebServer server;
+extern ESP8266HTTPUpdateServer httpUpdater;
+
 
 // 启动AP配网
 void startApConfig();

@@ -34,8 +34,16 @@ struct config_type
   {
     for (int i = 0; i < MAX_CARDUUID; i++)
     {
+      if (i == 0)
+      {
+        // strcpy(cardUUIDs[i], "1212121212");//测试代码
+        strcpy(cardUUIDs[i], "");
+        continue;
+      }
+
       strcpy(cardUUIDs[i], "");
     }
+    // allCardsLength = 1;//测试代码
     allCardsLength = 0;
     volumePercentage = 100;
   }

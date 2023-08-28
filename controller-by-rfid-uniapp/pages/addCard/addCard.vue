@@ -31,7 +31,7 @@
 		</view> -->
 
 		<view>
-			<u-alert title="说明" type = "primary " description = "descripntion"></u-alert>
+			<u-alert title="说明" type="primary " description="descripntion"></u-alert>
 		</view>
 
 		<view style="margin: 80rpx 0 50rpx 0;">
@@ -89,12 +89,14 @@
 						type: 'error',
 						title: '失败',
 						message: "失败",
+						icon: false,
 						iconUrl: 'https://cdn.uviewui.com/uview/demo/toast/error.png'
 					},
 					{
 						type: 'success',
 						title: '成功',
 						message: "成功",
+						icon: false,
 						iconUrl: 'https://cdn.uviewui.com/uview/demo/toast/success.png'
 					}
 				],
@@ -136,13 +138,6 @@
 							}
 						}); */
 		},
-		computed: {
-			getIcon() {
-				return path => {
-					return 'https://cdn.uviewui.com/uview/example/' + path + '.png';
-				}
-			},
-		},
 		methods: {
 			connectionInfo(str) {
 				if (str == "1") {
@@ -174,13 +169,37 @@
 						console.log(data);
 						let cardUUIDs = data.cardUUIDs;
 						console.log(data.cardUUIDs);
+
+						let cardEntity = {
+							"id": "",
+							"name": "",
+							"cardUUID": "",
+						};
+
 						for (let i = 0; i < cardUUIDs.length; i++) {
-							if (this.tableData[i] == null) {
-								break;
+							if (cardUUIDs[i] == "") {
+								let len = this.tableData.length;
+								if(i<len){
+									this.tableData.splice(i,1)
+								}
+								continue;
 							}
-							this.tableData[i].cardUUID = cardUUIDs[i];
+							console.log("this.tableData[i]",this.tableData[i]);
+							if (this.tableData[i] == null) {
+								cardEntity.id = this.tableData.length +1+"";
+								cardEntity.name = "未知";
+								cardEntity.cardUUID = cardUUIDs[i];
+								
+								this.tableData.push(cardEntity);
+								console.log("this.tableData",this.tableData);
+								console.log("2222");
+							} else {
+								console.log("3333");
+								this.tableData[i].cardUUID = cardUUIDs[i];
+							}
 						}
 						try {
+							console.log("this.tableData",this.tableData);
 							console.log("保存至本地缓存");
 							uni.setStorageSync('tableData', JSON.stringify(this.tableData));
 						} catch (e) {
@@ -209,7 +228,7 @@
 					},
 					success: (res) => {
 						console.log(res.data);
-						this.tableData.splice(id-1,1);
+						this.tableData.splice(id - 1, 1);
 						this.loading = false;
 						this.refresh();
 						this.list[1].message = res.data;
@@ -229,7 +248,7 @@
 			addCard() {
 				console.log("点击添加卡片确认");
 				console.log(this.value);
-				if (this.tableData.length > 7) {
+				if (this.tableData.length > 6) {
 					uni.showToast({
 						title: '卡片最大数量为7', // 消息内容
 						icon: 'none', // 消息图标，可选值：success/loading/none
@@ -238,7 +257,6 @@
 					return
 				}
 				if (this.value.trim() == "") {
-					console.log("123123");
 					uni.showToast({
 						title: '不能为空', // 消息内容
 						icon: 'none', // 消息图标，可选值：success/loading/none
@@ -286,7 +304,7 @@
 					success: (res) => {
 						console.log(res.data);
 						this.loading = false;
-
+						this.tableData = [];
 						try {
 							console.log("清空本地缓存");
 							uni.clearStorageSync("tableData");
@@ -304,13 +322,7 @@
 			},
 			showToast(params) {
 				this.$refs.uToast.show({
-					...params,
-					complete() {
-						params.url && uni.navigateTo({
-
-							url: params.url
-						})
-					}
+					...params
 				})
 			}
 
