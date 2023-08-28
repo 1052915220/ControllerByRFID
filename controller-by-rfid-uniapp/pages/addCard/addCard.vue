@@ -281,7 +281,6 @@
 						this.loading = false;
 						this.list[1].message = res.data;
 						this.showToast(this.list[1]);
-						this.refresh();
 					},
 					fail: () => {
 						this.loading = false;
